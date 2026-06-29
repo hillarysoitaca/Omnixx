@@ -35,14 +35,14 @@ body{background:var(--void);color:var(--white);font-family:var(--body);overflow-
 ::-webkit-scrollbar-thumb{background:var(--v1);border-radius:2px}
 
 /* ── BACKGROUND MESH ── */
-.mesh{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.mesh-blob{position:absolute;border-radius:50%;filter:blur(120px);opacity:0.18}
-.blob1{width:700px;height:700px;background:var(--v1);top:-200px;left:-200px;animation:drift1 18s ease-in-out infinite}
-.blob2{width:500px;height:500px;background:var(--pink);bottom:-100px;right:-100px;animation:drift2 22s ease-in-out infinite}
-.blob3{width:400px;height:400px;background:var(--cyan);top:40%;left:50%;transform:translate(-50%,-50%);animation:drift3 15s ease-in-out infinite}
-@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(80px,60px) scale(1.1)}}
-@keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-60px,-80px) scale(1.15)}}
-@keyframes drift3{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.2)}}
+.mesh{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;transform:translateZ(0)}
+.mesh-blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:0.12;will-change:transform;backface-visibility:hidden}
+.blob1{width:650px;height:650px;background:var(--v1);top:-220px;left:-220px;animation:drift1 45s ease-in-out infinite}
+.blob2{width:480px;height:480px;background:var(--pink);bottom:-140px;right:-140px;animation:drift2 52s ease-in-out infinite}
+.blob3{width:380px;height:380px;background:var(--cyan);top:42%;left:50%;transform:translate3d(-50%,-50%,0);animation:drift3 58s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(35px,25px,0) scale(1.04)}}
+@keyframes drift2{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-28px,-34px,0) scale(1.05)}}
+@keyframes drift3{0%,100%{transform:translate3d(-50%,-50%,0) scale(1)}50%{transform:translate3d(-48%,-52%,0) scale(1.05)}}
 
 /* noise overlay */
 .noise{position:fixed;inset:0;z-index:1;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");opacity:0.4}
@@ -57,6 +57,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.125rem 3rem;displa
 .nav-links a:hover{color:var(--white)}
 .nav-btn{background:linear-gradient(135deg,var(--v1),var(--pink));color:#fff!important;padding:0.5rem 1.375rem;border-radius:100px;font-weight:600;transition:opacity 0.2s,transform 0.15s!important}
 .nav-btn:hover{opacity:0.9;transform:translateY(-1px)!important}
+
+.hamburger{display:none;background:none;border:none;color:var(--white);font-size:1.8rem;line-height:1;cursor:pointer;padding:0.25rem;z-index:250}
+.hamburger span{display:block;width:24px;height:2px;background:var(--white);margin:5px 0;border-radius:99px;transition:transform 0.25s,opacity 0.25s}
+.hamburger.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 
 /* ── HERO ── */
 #hero{position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:8rem 2rem 5rem;text-align:center;overflow:hidden}
@@ -82,10 +88,12 @@ h1 .outline{-webkit-text-stroke:1px rgba(255,255,255,0.25);-webkit-text-fill-col
 
 /* ── MARQUEE ── */
 .marquee-wrap{position:relative;z-index:10;overflow:hidden;border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border);background:rgba(7,7,18,0.8);padding:1.125rem 0}
-.marquee-inner{display:flex;gap:3rem;width:max-content;animation:marquee 28s linear infinite}
-.marquee-item{font-family:var(--display);font-weight:700;font-size:0.8125rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted2);white-space:nowrap;display:flex;align-items:center;gap:0.75rem}
+.marquee-track{display:flex;width:max-content;animation:marquee 55s linear infinite;will-change:transform}
+.marquee-group{display:flex;align-items:center;gap:3rem;padding-right:3rem;flex:0 0 auto}
+.marquee-item{font-family:var(--display);font-weight:700;font-size:0.8125rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted2);white-space:nowrap;display:flex;align-items:center;gap:0.75rem;flex:0 0 auto}
 .marquee-dot{width:4px;height:4px;border-radius:50%;background:var(--v3);flex-shrink:0}
-@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marquee-wrap:hover .marquee-track{animation-play-state:paused}
+@keyframes marquee{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
 
 /* ── SECTIONS COMMON ── */
 section{position:relative;z-index:10}
@@ -209,7 +217,12 @@ footer{position:relative;z-index:10;border-top:1px solid var(--glass-border);pad
 }
 @media(max-width:768px){
   nav{padding:1rem 1.5rem}
-  .nav-links{display:none}
+  .hamburger{display:block}
+  .nav-links{position:absolute;top:100%;left:1rem;right:1rem;display:flex;flex-direction:column;align-items:stretch;gap:0.25rem;list-style:none;background:rgba(4,4,10,0.96);border:1px solid var(--glass-border);border-radius:18px;padding:0.75rem;box-shadow:0 20px 60px rgba(0,0,0,0.35);backdrop-filter:blur(18px);opacity:0;visibility:hidden;transform:translateY(-10px);pointer-events:none;transition:opacity 0.2s,transform 0.2s,visibility 0.2s}
+  .nav-links.open{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
+  .nav-links a{display:block;padding:0.9rem 1rem;border-radius:12px}
+  .nav-links a:hover{background:rgba(255,255,255,0.06)}
+  .nav-btn{text-align:center;margin-top:0.25rem}
   .section-wrap{padding:0 1.5rem}
   #services,#features,#about,#testimonials,#contact{padding:5rem 0}
   .services-header{flex-direction:column}
@@ -224,7 +237,7 @@ footer{position:relative;z-index:10;border-top:1px solid var(--glass-border);pad
   .form-row{grid-template-columns:1fr}
   footer{flex-direction:column;text-align:center;padding:2rem 1.5rem}
 }
-@media(prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;transition-duration:0.01ms!important}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}.marquee-track{animation:none!important}.mesh-blob{animation:none!important}}
 
 /* ── REVEAL ANIMATION ── */
 .reveal{opacity:0;transform:translateY(28px);transition:opacity 0.6s ease,transform 0.6s ease}
@@ -246,7 +259,14 @@ footer{position:relative;z-index:10;border-top:1px solid var(--glass-border);pad
     <div class="logo-mark">OX</div>
     Omni<em>xx</em>
   </a>
-  <ul class="nav-links">
+
+  <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primary-navigation">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <ul class="nav-links" id="primary-navigation">
     <li><a href="#services">Services</a></li>
     <li><a href="#features">Work</a></li>
     <li><a href="#about">About</a></li>
@@ -278,7 +298,8 @@ footer{position:relative;z-index:10;border-top:1px solid var(--glass-border);pad
 
 <!-- MARQUEE -->
 <div class="marquee-wrap">
-  <div class="marquee-inner">
+  <div class="marquee-track" aria-label="Services marquee">
+  <div class="marquee-group">
     <span class="marquee-item"><span class="marquee-dot"></span>Web Development</span>
     <span class="marquee-item"><span class="marquee-dot"></span>Cloud Architecture</span>
     <span class="marquee-item"><span class="marquee-dot"></span>AI Integration</span>
@@ -287,6 +308,8 @@ footer{position:relative;z-index:10;border-top:1px solid var(--glass-border);pad
     <span class="marquee-item"><span class="marquee-dot"></span>IT Consulting</span>
     <span class="marquee-item"><span class="marquee-dot"></span>DevOps</span>
     <span class="marquee-item"><span class="marquee-dot"></span>Data Engineering</span>
+  </div>
+  <div class="marquee-group" aria-hidden="true">
     <span class="marquee-item"><span class="marquee-dot"></span>Web Development</span>
     <span class="marquee-item"><span class="marquee-dot"></span>Cloud Architecture</span>
     <span class="marquee-item"><span class="marquee-dot"></span>AI Integration</span>
@@ -295,6 +318,7 @@ footer{position:relative;z-index:10;border-top:1px solid var(--glass-border);pad
     <span class="marquee-item"><span class="marquee-dot"></span>IT Consulting</span>
     <span class="marquee-item"><span class="marquee-dot"></span>DevOps</span>
     <span class="marquee-item"><span class="marquee-dot"></span>Data Engineering</span>
+  </div>
   </div>
 </div>
 
@@ -548,6 +572,26 @@ footer{position:relative;z-index:10;border-top:1px solid var(--glass-border);pad
 </footer>
 
 <script>
+// MOBILE NAV
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
+
+if (hamburger && navLinks) {
+  hamburger.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    hamburger.classList.toggle('active', isOpen);
+    hamburger.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      hamburger.classList.remove('active');
+      hamburger.setAttribute('aria-expanded', 'false');
+    });
+  });
+}
+
 // REVEAL on scroll
 const revealObs = new IntersectionObserver((entries) => {
   entries.forEach((e, i) => {
